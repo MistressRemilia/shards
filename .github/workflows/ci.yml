@@ -16,6 +16,8 @@ jobs:
         include:
           - os: windows-2022
             crystal: nightly
+          - os: ubuntu-22.04
+            crystal: 1.0.0
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -60,10 +62,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build
-        run: make
+        run: make -f ${{ runner.os == 'Windows' && 'Makefile.win' || 'Makefile' }}
 
       - name: Run specs
-        run: make test
+        run: make -f ${{ runner.os == 'Windows' && 'Makefile.win' || 'Makefile' }} test
 
       - name: Check formatting
         run: crystal tool format --check src spec
